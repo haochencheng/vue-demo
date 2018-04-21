@@ -5,8 +5,9 @@
     1.yarn 
     2.测试环境  npm run dev
       开发环境  npm run server
-#   前后端分离
-##  Vue 项目架构设计与工程化实践
+      
+#   学习笔记      
+##  前后端分离 Vue 项目架构设计与工程化实践
     https://github.com/berwin/Blog
 ##  Vue搭建参考
     https://github.com/lenve/VBlog
