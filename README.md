@@ -1,4 +1,10 @@
 # vue-demo
+##  项目启动方式 
+    需要环境nodejs,webpack,npm,yarn
+### 启动方式
+    1.yarn 
+    2.测试环境  npm run dev
+      开发环境  npm run server
 #   前后端分离
 ##  Vue 项目架构设计与工程化实践
     https://github.com/berwin/Blog
