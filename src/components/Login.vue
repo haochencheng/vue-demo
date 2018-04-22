@@ -54,7 +54,9 @@
                             var json=resp.data;
                             //todo
                             this.$Message.success('登录成功!');
-                            this.$router.replace({path: '/home'});
+                            this.$session.start();
+                            this.$session.set('username',json.username);
+                            this.$router.push('/home');
                         }else {
                             this.$Message('登录失败!', '失败!');
                         }
