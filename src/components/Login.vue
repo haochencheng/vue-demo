@@ -45,7 +45,6 @@
                     if (!valid) {
                         return;
                     }
-                    console.log(this.loginForm.remember_me);
                     postRequest('/login',{
                         data:this.loginForm
                     }).then(resp=>{
@@ -54,7 +53,6 @@
                             var result=resp.data;
                             this.$Message.success('登录成功!');
                             this.$session.start();
-                            console.log('username=-========='+JSON.stringify(result));
                             this.$session.set('username',result.data.username);
                             this.$router.push('/home');
                         }else {

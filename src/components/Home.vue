@@ -1,34 +1,25 @@
+
 <template>
     <Row class="home_container" align="top">
         <Row class="home_header">
-            <div class="home_title">接口监控管理平台</div>
-            <div class="home_userinfo">
-                <Dropdown >
-                    <a  href="javascript:void(0)">
-                       <span class="home_userinfo_span" >{{this.$session.get('username')}}</span>
-                        <Icon type="arrow-down-b"></Icon>
-                    </a>
-                    <DropdownMenu slot="list">
-                        <span @click="logout()"><DropdownItem >注销</DropdownItem></span>
-                    </DropdownMenu>
-                </Dropdown>
-            </div>
+            <Header />
         </Row>
         <Row>
             <Col span="4" class="home_menu">
-
+                <NavigationMenu />
             </Col>
-            <Col span="8" class="home_body">
+            <Col span="20" class="home_body">
 
             </Col>
         </Row>
     </Row>
 </template>
 <script>
-    import Spin from "iview/src/components/spin/spin";
-
     export default {
-        components: {Spin},
+        components: {
+            'Header': () => import('./Header'),
+            'NavigationMenu': () => import('./NavigationMenu')
+        } ,
         mounted: function () {
             if (!this.$session.exists()) {
                 this.$router.push('/');
@@ -59,21 +50,6 @@
         height: 10%;
         background-color: #48A0F8;
     }
-    .home_title {
-        color: black;
-        font-size: 22px;
-        display: inline;
-        float: left;
-        margin:25px 0 0 15px;
-    }
-    .home_userinfo {
-        float: right;
-        margin:35px 25px 0 15px;
-    }
-    .home_userinfo_span {
-        color: black;
-        cursor: pointer;
-        font-size: 16px;
-    }
+
 
 </style>
