@@ -51,11 +51,11 @@
                     }).then(resp=>{
                         if(resp.status==200){
                             //成功
-                            var json=resp.data;
-                            //todo
+                            var result=resp.data;
                             this.$Message.success('登录成功!');
                             this.$session.start();
-                            this.$session.set('username',json.username);
+                            console.log('username=-========='+JSON.stringify(result));
+                            this.$session.set('username',result.data.username);
                             this.$router.push('/home');
                         }else {
                             this.$Message('登录失败!', '失败!');
