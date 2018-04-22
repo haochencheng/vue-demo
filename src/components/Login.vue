@@ -54,6 +54,7 @@
                             var json=resp.data;
                             //todo
                             this.$Message.success('登录成功!');
+                            this.$router.replace({path: '/home'});
                         }else {
                             this.$Message('登录失败!', '失败!');
                         }

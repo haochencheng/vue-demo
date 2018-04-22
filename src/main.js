@@ -3,6 +3,7 @@ import App from './App.vue'
 import iView from 'iview/dist/iview'
 import Routers from './router/router'
 import 'iview/dist/styles/iview.css';
+require('./utils/mock')
 
 Vue.config.productionTip = false;
 
