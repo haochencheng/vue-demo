@@ -3,26 +3,29 @@
         <h3 class="login_title">系统登录</h3>
         <FormItem prop="user">
             <i-input type="text" v-model="loginForm.username" placeholder="用户名" auto-complete="off">
-                <Icon type="ios-person-outline" slot="prepend"></Icon>
+                <Icon type="ios-person-outline" slot="prepend">{{loginForm.username}}</Icon>
             </i-input>
         </FormItem>
         <FormItem prop="password">
             <i-input type="password" v-model="loginForm.password" placeholder="密码" auto-complete="off">
-                <Icon type="ios-locked-outline" slot="prepend"></Icon>
+                <Icon type="ios-locked-outline" slot="prepend">{{loginForm.password}}</Icon>
             </i-input>
         </FormItem>
+        <span @click="switch_remember_me()"><Checkbox class="login_remember" :model="loginForm.remember_me" >记住密码</Checkbox></span>
         <FormItem>
             <Button type="primary" @click="handleSubmit('loginForm')" style="width: 100%">登录</Button>
         </FormItem>
     </Form>
 </template>
 <script>
+    import {postRequest} from '../utils/api'
     export default {
         data () {
             return {
                 loginForm: {
                     username: '',
-                    password: ''
+                    password: '',
+                    remember_me:false
                 },
                 ruleLoginForm: {
                     username: [
@@ -37,13 +40,30 @@
             }
         },
         methods: {
-            handleSubmit(name) {
-                this.$refs[name].validate((valid) => {
+            handleSubmit(loginData) {
+                this.$refs[loginData].validate((valid) => {
                     if (!valid) {
                         return;
                     }
-                    this.$Message.success('登录成功!');
+                    console.log(this.loginForm.remember_me);
+                    postRequest('/login',{
+                        data:this.loginForm
+                    }).then(resp=>{
+                        if(resp.status==200){
+                            //成功
+                            var json=resp.data;
+                            //todo
+                            this.$Message.success('登录成功!');
+                        }else {
+                            this.$Message('登录失败!', '失败!');
+                        }
+                    }, resp=> {
+                        this.$Message('找不到服务器⊙﹏⊙∥!', '失败!');
+                    });
                 })
+            },
+            switch_remember_me: function(){
+                this.loginForm.remember_me=!this.loginForm.remember_me;
             }
         }
     }
@@ -67,7 +87,8 @@
     }
 
     .login_remember {
-        margin: 0px 0px 35px 0px;
+        margin: 0px 0px 25px 0px;
         text-align: left;
+        float:left;
     }
 </style>
