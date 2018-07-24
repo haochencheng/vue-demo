@@ -1,22 +1,28 @@
 <template>
-    <div>
-        <div class="home_title">接口监控管理平台</div>
-        <div class="home_userinfo">
-            <Dropdown >
+        <div>
+            <div class="home_title">接口监控管理平台</div>
+            <el-dropdown :hide-on-click="false">
                 <a  href="javascript:void(0)">
-                    <span class="home_userinfo_span" >{{this.$session.get('username')}}</span>
-                    <Icon type="arrow-down-b"></Icon>
+                    <span class="home_userInfo_span" >{{this.$session.get('username')}}</span>
+                    <i class="el-icon-setting" style="margin-right: 15px"></i>
                 </a>
-                <DropdownMenu slot="list">
-                    <span @click="logout()"><DropdownItem >注销</DropdownItem></span>
-                </DropdownMenu>
-            </Dropdown>
+
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item  @click.native="logout()" >注销</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
         </div>
-    </div>
+
 </template>
 <script>
     export default {
-
+        methods: {
+            logout: function () {
+                alert('logout');
+                this.$session.destroy();
+                this.$router.push('/');
+            }
+        }
     }
 </script>
 <style>
@@ -27,11 +33,7 @@
         float: left;
         margin:25px 0 0 15px;
     }
-    .home_userinfo {
-        float: right;
-        margin:35px 25px 0 15px;
-    }
-    .home_userinfo_span {
+    .home_userInfo_span {
         color: black;
         cursor: pointer;
         font-size: 16px;

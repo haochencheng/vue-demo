@@ -1,71 +1,84 @@
 <template>
-    <Form ref="loginForm" :model="loginForm" :rules="ruleLoginForm" class="login-container" label-position="left">
+    <el-form :model="loginForm" :rules="ruleLoginForm" ref="loginForm" label-width="100px" class="login-container"
+             :label-position="labelPosition">
         <h3 class="login_title">系统登录</h3>
-        <FormItem prop="user">
-            <i-input type="text" v-model="loginForm.username" placeholder="用户名" auto-complete="off">
-                <Icon type="ios-person-outline" slot="prepend">{{loginForm.username}}</Icon>
-            </i-input>
-        </FormItem>
-        <FormItem prop="password">
-            <i-input type="password" v-model="loginForm.password" placeholder="密码" auto-complete="off">
-                <Icon type="ios-locked-outline" slot="prepend">{{loginForm.password}}</Icon>
-            </i-input>
-        </FormItem>
-        <span @click="switch_remember_me()"><Checkbox class="login_remember" :model="loginForm.remember_me" >记住密码</Checkbox></span>
-        <FormItem>
-            <Button type="primary" @click="handleSubmit('loginForm')" style="width: 100%">登录</Button>
-        </FormItem>
-    </Form>
+        <el-form-item label="用户名" prop="username">
+            <el-input v-model="loginForm.username"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+            <el-input v-model="loginForm.password"></el-input>
+        </el-form-item>
+        <div>
+            <el-checkbox  v-model="loginForm.remember_me" label="记住我" name="remember_me" />
+            <span v-model="err_msg" v-show="is_show" class="err_msg">aaaaa</span>
+        </div>
+        <el-form-item>
+            <el-button type="primary" @click="submitForm('loginForm')">登录</el-button>
+        </el-form-item>
+
+    </el-form>
 </template>
 <script>
     import {postRequest} from '../utils/api'
+
     export default {
-        data () {
+        data() {
             return {
+                labelPosition: 'left',
+                is_show: false,
+                err_msg: '',
                 loginForm: {
                     username: '',
                     password: '',
-                    remember_me:false
+                    remember_me: false,
                 },
                 ruleLoginForm: {
                     username: [
-                        { required: true, message: '请输入用户名', trigger: 'blur' }
+                        {required: true, message: '请输入用户名', trigger: 'blur'}
                     ],
                     password: [
-                        { required: true, message: '请输入密码', trigger: 'blur' },
-                        { type: 'string', min: 6, message: '密码必须大于6位', trigger: 'blur' },
-                        { type: 'string', max: 16, message: '密码必须小于16位', trigger: 'blur' }
-                    ]
+                        {required: true, message: '请输入密码', trigger: 'blur'},
+                        {min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur'}
+                    ],
                 }
-            }
+            };
         },
         methods: {
-            handleSubmit(loginData) {
-                this.$refs[loginData].validate((valid) => {
-                    if (!valid) {
-                        return;
+            submitForm(loginForm) {
+                this.$refs[loginForm].validate((valid) => {
+                    this.is_show=false;
+                    if (valid) {
+                        console.log(this.loginForm);
+                        postRequest('/login', {
+                            data: this.loginForm
+                        }).then(resp => {
+                            if (resp.status == 200) {
+                                //成功
+                                var result = resp.data;
+                                console.log(result);
+                                if (result.status == 0) {
+                                    this.$message({
+                                        message: '登录成功',
+                                        type: 'success'
+                                    });
+                                    this.$session.start();
+                                    this.$session.set('username', result.data.username);
+                                    this.$router.push('/home');
+                                } else {
+                                    this.err_msg = result.msg;
+                                    this.is_show = true;
+
+                                }
+                            } else {
+                                this.$message('登录失败!', '失败!');
+                            }
+                        });
+                    } else {
+                        console.log('error submit!!');
+                        return false;
                     }
-                    postRequest('/login',{
-                        data:this.loginForm
-                    }).then(resp=>{
-                        if(resp.status==200){
-                            //成功
-                            var result=resp.data;
-                            this.$Message.success('登录成功!');
-                            this.$session.start();
-                            this.$session.set('username',result.data.username);
-                            this.$router.push('/home');
-                        }else {
-                            this.$Message('登录失败!', '失败!');
-                        }
-                    }, resp=> {
-                        this.$Message('找不到服务器⊙﹏⊙∥!', '失败!');
-                    });
-                })
+                });
             },
-            switch_remember_me: function(){
-                this.loginForm.remember_me=!this.loginForm.remember_me;
-            }
         }
     }
 </script>
@@ -90,6 +103,10 @@
     .login_remember {
         margin: 0px 0px 25px 0px;
         text-align: left;
-        float:left;
+        float: left;
+    }
+
+    .err_msg {
+        color: red;
     }
 </style>
