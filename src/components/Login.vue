@@ -6,20 +6,20 @@
             <el-input v-model="loginForm.username"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-            <el-input v-model="loginForm.password"></el-input>
+            <el-input type="password" v-model="loginForm.password"></el-input>
         </el-form-item>
         <div>
             <el-checkbox  v-model="loginForm.remember_me" label="记住我" name="remember_me" />
-            <span v-model="err_msg" v-show="is_show" class="err_msg">aaaaa</span>
+            <span v-model="err_msg" v-show="is_show" class="err_msg">{{err_msg}}</span>
         </div>
         <el-form-item>
             <el-button type="primary" @click="submitForm('loginForm')">登录</el-button>
         </el-form-item>
-
     </el-form>
 </template>
 <script>
     import {postRequest} from '../utils/api'
+    var md5 = require('md5');
 
     export default {
         data() {
@@ -38,7 +38,7 @@
                     ],
                     password: [
                         {required: true, message: '请输入密码', trigger: 'blur'},
-                        {min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur'}
+                        {min: 5, max: 16, message: '长度在 5 到 16 个字符', trigger: 'blur'}
                     ],
                 }
             };
@@ -47,19 +47,24 @@
             submitForm(loginForm) {
                 this.$refs[loginForm].validate((valid) => {
                     this.is_show=false;
+                    const data=this.loginForm;
+                    data['password']=md5(data.password);
+                    console.log('data.password',data.password);
+                    data['source']='877a58ea5920542fc20b32632d1a796c';
                     if (valid) {
                         console.log(this.loginForm);
-                        postRequest('/login', {
-                            data: this.loginForm
+                        postRequest('/user/auth', {
+                            data: data
                         }).then(resp => {
+                            console.log('resp',resp);
                             if (resp.status == 200) {
                                 //成功
                                 var result = resp.data;
-                                console.log(result);
-                                if (result.status == 0) {
+                                if (result.code == 200) {
                                     this.$message({
                                         message: '登录成功',
-                                        type: 'success'
+                                        type: 'success',
+                                        duration:1200
                                     });
                                     this.$session.start();
                                     this.$session.set('username', result.data.username);

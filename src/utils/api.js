@@ -1,24 +1,31 @@
 import axios from 'axios'
 
-let base = '';
+let base = 'http://58.87.64.219';
+
+import qs from 'qs';
+
+axios.interceptors.request.use( (config) => {
+    if (config.method=="post"){
+        config.data = qs.stringify(config.data);
+        config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+    }
+    return config;
+},  (error) => {
+    return Promise.reject(error);
+});
+
 export const postRequest = (url, params) => {
+    console.log(' params.data', params.data);
     return axios({
         method: 'post',
         url: `${base}${url}`,
-        data: params,
-        transformRequest: [function (data) {
-            // Do whatever you want to transform the data
-            let ret = ''
-            for (let it in data) {
-                ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-            }
-            return ret
-        }],
+        data: params.data,
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'multipart/form-data',
         }
     });
 }
+
 export const uploadFileRequest = (url, params) => {
     return axios({
         method: 'post',
