@@ -1,10 +1,12 @@
 <template>
-        <el-menu :default-openeds="['1', '3']">
+        <el-menu :default-openeds="['1', '3']" :default-active="defaultActive"  @select="handleSelect">
             <el-submenu index="1">
                 <template slot="title"><i class="el-icon-message"></i>用户管理</template>
                 <el-menu-item-group>
-                    <el-menu-item index="1-1" @click.native="userList()">用户列表</el-menu-item>
-                    <el-menu-item index="1-2"></el-menu-item>
+                        <el-menu-item index="user_list">用户列表</el-menu-item>
+                    <el-menu-item index="1-2">
+
+                    </el-menu-item>
                 </el-menu-item-group>
                 <!--<el-menu-item-group title="分组2">-->
                     <!--<el-menu-item index="1-3">选项3</el-menu-item>-->
@@ -19,12 +21,19 @@
 
 <script>
     export default {
-        methods:{
-            userList:function () {
-                this.$router.push('/user_list');
+        computed: {
+            defaultActive: function(){
+                return this.$route.path.replace('/', '');
+            }
+        },
+        methods: {
+            handleSelect(key, keyPath) {
+                console.log(keyPath);
+                this.$router.push('/'+keyPath[1]);
             }
         }
     }
+
 </script>
 <style>
 

@@ -12,7 +12,9 @@
             </el-aside>
 
             <el-main>
-                <router-view></router-view>
+                <keep-alive>
+                    <router-view></router-view>
+                </keep-alive>
             </el-main>
 
         </el-container>
@@ -22,14 +24,12 @@
         </el-footer>
     </el-container>
 
-
 </template>
 <script>
     export default {
         components: {
             'Header': () => import('./Header'),
             'NavigationMenu': () => import('./NavigationMenu'),
-            'Main': () => import('./Main'),
             'Footer': () => import('./Footer'),
         },
         mounted: function () {
@@ -44,7 +44,7 @@
         methods: {
             logout: function () {
                 this.$session.destroy();
-                this.$router.push('/');
+                this.$router.push('login');
             }
         }
     }

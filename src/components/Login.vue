@@ -68,7 +68,7 @@
                                     });
                                     this.$session.start();
                                     this.$session.set('username', result.data.username);
-                                    this.$router.push('/home');
+                                    this.$router.push('/');
                                 } else {
                                     this.err_msg = result.msg;
                                     this.is_show = true;
