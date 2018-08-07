@@ -49,35 +49,26 @@
                     this.is_show=false;
                     const data=this.loginForm;
                     data['password']=md5(data.password);
-                    console.log('data.password',data.password);
                     data['source']='877a58ea5920542fc20b32632d1a796c';
                     if (valid) {
-                        console.log(this.loginForm);
-                        postRequest('/user/auth', {
+                        const data=postRequest('/user/auth', {
                             data: data
-                        }).then(resp => {
-                            console.log('resp',resp);
-                            if (resp.status == 200) {
-                                //成功
-                                var result = resp.data;
-                                if (result.code == 200) {
-                                    this.$message({
-                                        message: '登录成功',
-                                        type: 'success',
-                                        duration:1200
-                                    });
-                                    this.$session.start();
-                                    this.$session.set('username', result.data.username);
-                                    this.$router.push('/');
-                                } else {
-                                    this.err_msg = result.msg;
-                                    this.is_show = true;
-
-                                }
-                            } else {
-                                this.$message('登录失败!', '失败!');
-                            }
                         });
+                        if(data.status==1){
+                            this.$message({
+                                message: '登录成功',
+                                type: 'success',
+                                duration:1200
+                            });
+                            console.log('data========>>>>',data);
+                            sessionStorage.setItem("username", data.username);
+                            sessionStorage.setItem("token", data.token);
+                            this.$router.push('/');
+                        }else {
+                            this.err_msg = result.msg;
+                            this.is_show = true;
+
+                        }
                     } else {
                         console.log('error submit!!');
                         return false;
@@ -103,12 +94,6 @@
         margin: 0px auto 40px auto;
         text-align: center;
         color: #505458;
-    }
-
-    .login_remember {
-        margin: 0px 0px 25px 0px;
-        text-align: left;
-        float: left;
     }
 
     .err_msg {

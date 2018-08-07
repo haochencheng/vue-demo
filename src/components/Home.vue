@@ -33,8 +33,9 @@
             'Footer': () => import('./Footer'),
         },
         mounted: function () {
-            if (!this.$session.exists()) {
-                this.$router.push('/');
+            let user = sessionStorage.getItem('user');
+            if (user==null) {
+                this.$router.replace('/login');
                 console.log('before:' + this.$session.getAll());
             }
         },
@@ -44,7 +45,7 @@
         methods: {
             logout: function () {
                 this.$session.destroy();
-                this.$router.push('login');
+                this.$router.replace('/login');
             }
         }
     }
